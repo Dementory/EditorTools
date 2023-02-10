@@ -1,53 +1,56 @@
 using UnityEditor;
 using UnityEngine;
 
-public class IconCreatorWindow : EditorWindow
+namespace EditorTool.Editor.IconCreator
 {
-    private const string WINDOW_NAME = "Icon creator";
-    private const int PADDING = 10;
-
-    IconData _iconData = new IconData(null, Vector3.zero, new Color(1, 1, 1, 1), new Vector2(100, 60), new Color(1, 1, 1, 1), 1);
-    private Texture2D _icon;
-
-    private IIconCreator _iconCreator = new IconCreator();
-
-    [MenuItem("Tools/" + WINDOW_NAME)]
-    public static void OpenWindow() => GetWindow<IconCreatorWindow>(WINDOW_NAME);
-
-    private void OnGUI()
+    public class IconCreatorWindow : EditorWindow
     {
-        GUILayout.BeginArea(EditorWindowUtils.GetArea(position, PADDING));
+        private const string WINDOW_NAME = "Icon creator";
+        private const int PADDING = 10;
 
-        GUILayout.Label("Model", EditorWindowUtils.BoldStyle);
-        EditorWindowUtils.CreateObjectField(ref _iconData.ModelPrefab, "Model Reference");
-        _iconData.ModelPositionOffset = EditorGUILayout.Vector3Field("Position offset", _iconData.ModelPositionOffset);
+        IconData _iconData = new IconData(null, Vector3.zero, new Color(1, 1, 1, 1), new Vector2(100, 60), new Color(1, 1, 1, 1), 1);
+        private Texture2D _icon;
 
-        GUILayout.Space(10);
+        private IIconCreator _iconCreator = new IconCreator();
 
-        GUILayout.Label("Background", EditorWindowUtils.BoldStyle);
-        _iconData.BackgroundColor = EditorGUILayout.ColorField("Background color", _iconData.BackgroundColor);
+        [MenuItem("Tools/" + WINDOW_NAME)]
+        public static void OpenWindow() => GetWindow<IconCreatorWindow>(WINDOW_NAME);
 
-        GUILayout.Space(10);
+        private void OnGUI()
+        {
+            GUILayout.BeginArea(EditorWindowUtils.GetArea(position, PADDING));
 
-        GUILayout.Label("Light", EditorWindowUtils.BoldStyle);
-        _iconData.LightRotation = EditorGUILayout.Vector2Field("Light rotation", _iconData.LightRotation);
-        _iconData.LightColor = EditorGUILayout.ColorField("Light color", _iconData.LightColor);
-        _iconData.LightIntensity = EditorGUILayout.FloatField("Light intensity", _iconData.LightIntensity);
+            GUILayout.Label("Model", EditorWindowUtils.BoldStyle);
+            EditorWindowUtils.CreateObjectField(ref _iconData.ModelPrefab, "Model Reference");
+            _iconData.ModelPositionOffset = EditorGUILayout.Vector3Field("Position offset", _iconData.ModelPositionOffset);
 
-        GUILayout.Space(10);
+            GUILayout.Space(10);
 
-        if (GUILayout.Button("Create"))
-            _iconCreator.SaveIcon(_iconData);
+            GUILayout.Label("Background", EditorWindowUtils.BoldStyle);
+            _iconData.BackgroundColor = EditorGUILayout.ColorField("Background color", _iconData.BackgroundColor);
 
-        PreviewIcon();
+            GUILayout.Space(10);
 
-        GUILayout.EndArea();
+            GUILayout.Label("Light", EditorWindowUtils.BoldStyle);
+            _iconData.LightRotation = EditorGUILayout.Vector2Field("Light rotation", _iconData.LightRotation);
+            _iconData.LightColor = EditorGUILayout.ColorField("Light color", _iconData.LightColor);
+            _iconData.LightIntensity = EditorGUILayout.FloatField("Light intensity", _iconData.LightIntensity);
+
+            GUILayout.Space(10);
+
+            if (GUILayout.Button("Create"))
+                _iconCreator.SaveIcon(_iconData);
+
+            PreviewIcon();
+
+            GUILayout.EndArea();
+        }
+
+        private void PreviewIcon()
+        {
+            _icon = _iconCreator.CreateIcon(_iconData);
+            GUILayout.Box(_icon);
+        }
+
     }
-
-    private void PreviewIcon()
-    {
-        _icon = _iconCreator.CreateIcon(_iconData);
-        GUILayout.Box(_icon);
-    }
-
 }

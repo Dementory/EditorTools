@@ -2,22 +2,25 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 
-public class CharacterPrefabCreator : ICharacterPrefabCreator
+namespace EditorTool.Editor.PrefabCreator
 {
-    private ICharacterPrefabComposer _prefabComposer = new CharacterPrefabComposer();
-
-    public void CreatePrefab(GameObject modelPrefab, AnimatorController animatorController, Material material)
+    public class CharacterPrefabCreator : ICharacterPrefabCreator
     {
-        GameObject model = GameObject.Instantiate(modelPrefab);
-        Vector3 size = MeshUtils.GetSkinnedMeshRendererSize(model);
+        private ICharacterPrefabComposer _prefabComposer = new CharacterPrefabComposer();
 
-        string saveFolder = EditorUtility.OpenFolderPanel("Choose save folder", "", "");
-        string filePath = $"{saveFolder}/{model.gameObject.name}.prefab";
+        public void CreatePrefab(GameObject modelPrefab, AnimatorController animatorController, Material material)
+        {
+            GameObject model = GameObject.Instantiate(modelPrefab);
+            Vector3 size = MeshUtils.GetSkinnedMeshRendererSize(model);
 
-        _prefabComposer.Compose(model, size, animatorController, material);
+            string saveFolder = EditorUtility.OpenFolderPanel("Choose save folder", "", "");
+            string filePath = $"{saveFolder}/{model.gameObject.name}.prefab";
 
-        PrefabUtility.SaveAsPrefabAsset(model, filePath, out _);
+            _prefabComposer.Compose(model, size, animatorController, material);
 
-        GameObject.DestroyImmediate(model);
+            PrefabUtility.SaveAsPrefabAsset(model, filePath, out _);
+
+            GameObject.DestroyImmediate(model);
+        }
     }
 }

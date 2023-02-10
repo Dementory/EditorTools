@@ -1,7 +1,10 @@
 using UnityEditor.Animations;
 using UnityEngine;
 
-public interface ICharacterPrefabCreator
+namespace EditorTool.Editor.PrefabCreator
 {
-    void CreatePrefab(GameObject modelPrefab, AnimatorController animatorController, Material material);
+    public interface ICharacterPrefabCreator
+    {
+        void CreatePrefab(GameObject modelPrefab, AnimatorController animatorController, Material material);
+    }
 }

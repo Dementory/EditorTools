@@ -1,78 +1,81 @@
 using UnityEngine;
 
-public class IconComposer : IIconComposer
+namespace EditorTool.Editor.IconCreator
 {
-    private const string ICON_LAYER_NAME = "Icon";
-    private int _layer => LayerMask.NameToLayer(ICON_LAYER_NAME);
-
-    private GameObject _model;
-    private Camera _camera;
-    private GameObject _lightObject;
-
-    private IconData _iconData;
-
-    public void Compose(IconData iconData, out Camera camera)
+    public class IconComposer : IIconComposer
     {
-        _iconData = iconData;
+        private const string ICON_LAYER_NAME = "Icon";
+        private int _layer => LayerMask.NameToLayer(ICON_LAYER_NAME);
 
-        SetUpModel();
+        private GameObject _model;
+        private Camera _camera;
+        private GameObject _lightObject;
 
-        _camera = CreateCamera();
-        camera = _camera;
+        private IconData _iconData;
 
-        ColorBackground();
-        SpawnLight();
-    }
+        public void Compose(IconData iconData, out Camera camera)
+        {
+            _iconData = iconData;
 
-    private Camera CreateCamera()
-    {
-        Vector3 modelSize = MeshUtils.GetSkinnedMeshRendererSize(_model);
+            SetUpModel();
 
-        GameObject cameraObject = new GameObject("Icon camera");
+            _camera = CreateCamera();
+            camera = _camera;
 
-        float distance = Mathf.Max(modelSize.x, modelSize.y) * 2;
-        float height = modelSize.z / 2;
-        cameraObject.transform.position = new Vector3(0, height, distance) + _iconData.ModelPositionOffset;
-        cameraObject.transform.rotation = Quaternion.LookRotation(GetLookDirection());
+            ColorBackground();
+            SpawnLight();
+        }
 
-        Camera camera = cameraObject.AddComponent<Camera>();
-        camera.cullingMask = 1 << _layer;
+        private Camera CreateCamera()
+        {
+            Vector3 modelSize = MeshUtils.GetSkinnedMeshRendererSize(_model);
 
-        return camera;
+            GameObject cameraObject = new GameObject("Icon camera");
 
-        Vector3 GetLookDirection() => _model.transform.position + new Vector3(0, modelSize.z / 2, 0) - cameraObject.transform.position;
-    }
+            float distance = Mathf.Max(modelSize.x, modelSize.y) * 2;
+            float height = modelSize.z / 2;
+            cameraObject.transform.position = new Vector3(0, height, distance) + _iconData.ModelPositionOffset;
+            cameraObject.transform.rotation = Quaternion.LookRotation(GetLookDirection());
 
-    private void SetUpModel()
-    {
-        _model = GameObject.Instantiate(_iconData.ModelPrefab, Vector3.zero, Quaternion.identity);
+            Camera camera = cameraObject.AddComponent<Camera>();
+            camera.cullingMask = 1 << _layer;
 
-        _model.layer = _layer;
-        _model.transform.DoToAllChildren(child => child.gameObject.layer = _layer);
-    }
+            return camera;
 
-    private void ColorBackground()
-    {
-        _camera.clearFlags = CameraClearFlags.SolidColor;
-        _camera.backgroundColor = _iconData.BackgroundColor;
-    }
+            Vector3 GetLookDirection() => _model.transform.position + new Vector3(0, modelSize.z / 2, 0) - cameraObject.transform.position;
+        }
 
-    private void SpawnLight()
-    {
-        _lightObject = new GameObject("Icon light");
-        _lightObject.transform.rotation = Quaternion.Euler(_iconData.LightRotation);
+        private void SetUpModel()
+        {
+            _model = GameObject.Instantiate(_iconData.ModelPrefab, Vector3.zero, Quaternion.identity);
 
-        Light light = _lightObject.AddComponent<Light>();
-        light.type = LightType.Directional;
-        light.color = _iconData.LightColor;
-        light.intensity = _iconData.LightIntensity;
-        light.cullingMask = 1 << _layer;
-    }
+            _model.layer = _layer;
+            _model.transform.DoToAllChildren(child => child.gameObject.layer = _layer);
+        }
 
-    public void Clear()
-    {
-        GameObject.DestroyImmediate(_camera.gameObject);
-        GameObject.DestroyImmediate(_model);
-        GameObject.DestroyImmediate(_lightObject);
+        private void ColorBackground()
+        {
+            _camera.clearFlags = CameraClearFlags.SolidColor;
+            _camera.backgroundColor = _iconData.BackgroundColor;
+        }
+
+        private void SpawnLight()
+        {
+            _lightObject = new GameObject("Icon light");
+            _lightObject.transform.rotation = Quaternion.Euler(_iconData.LightRotation);
+
+            Light light = _lightObject.AddComponent<Light>();
+            light.type = LightType.Directional;
+            light.color = _iconData.LightColor;
+            light.intensity = _iconData.LightIntensity;
+            light.cullingMask = 1 << _layer;
+        }
+
+        public void Clear()
+        {
+            GameObject.DestroyImmediate(_camera.gameObject);
+            GameObject.DestroyImmediate(_model);
+            GameObject.DestroyImmediate(_lightObject);
+        }
     }
 }

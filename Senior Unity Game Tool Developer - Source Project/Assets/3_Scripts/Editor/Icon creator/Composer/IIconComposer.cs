@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public interface IIconComposer
+namespace EditorTool.Editor.IconCreator
 {
-    void Compose(IconData iconData, out Camera camera);
+    public interface IIconComposer
+    {
+        void Compose(IconData iconData, out Camera camera);
 
-    void Clear();
+        void Clear();
+    }
 }

@@ -1,7 +1,10 @@
 using UnityEditor.Animations;
 using UnityEngine;
 
-public interface ICharacterPrefabComposer
+namespace EditorTool.Editor.PrefabCreator
 {
-    void Compose(GameObject model, Vector3 modelSize, AnimatorController animatorController, Material material);
+    public interface ICharacterPrefabComposer
+    {
+        void Compose(GameObject model, Vector3 modelSize, AnimatorController animatorController, Material material);
+    }
 }

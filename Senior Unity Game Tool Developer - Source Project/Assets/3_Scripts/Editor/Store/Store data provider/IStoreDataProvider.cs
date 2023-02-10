@@ -1,4 +1,8 @@
-public interface IStoreDataProvider
+namespace EditorTool.Editor.Store
 {
-    StoreData GetStoreData();
+
+    public interface IStoreDataProvider
+    {
+        StoreData GetStoreData();
+    }
 }

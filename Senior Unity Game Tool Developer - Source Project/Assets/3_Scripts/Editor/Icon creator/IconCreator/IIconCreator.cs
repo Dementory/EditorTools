@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public interface IIconCreator
+namespace EditorTool.Editor.IconCreator
 {
-    void SaveIcon(IconData iconData);
+    public interface IIconCreator
+    {
+        void SaveIcon(IconData iconData);
 
-    Texture2D CreateIcon(IconData iconData);
+        Texture2D CreateIcon(IconData iconData);
+    }
 }
